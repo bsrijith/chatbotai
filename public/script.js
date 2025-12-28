@@ -1,3 +1,6 @@
+
+const BACKEND_URL = "https://YOUR-RENDER-APP-NAME.onrender.com";
+
 async function sendMessage() {
   const input = document.getElementById("input");
   const chat = document.getElementById("chat");
@@ -11,21 +14,22 @@ async function sendMessage() {
     return;
   }
 
-  // Show user message
+  // Show user message locally immediately
   chat.innerHTML += `<p class="user">${input.value}</p>`;
 
   const userMessage = input.value;
-  input.value = "";
+  input.value = ""; // Clear input
 
   try {
-    const res = await fetch("/api/chat", {
+    // ✅ CHANGED: Uses full Render URL
+    const res = await fetch(`${BACKEND_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         message: userMessage,
-        userEmail: userEmail   // ✅ FIX HERE
+        userEmail: userEmail
       })
     });
 
@@ -35,7 +39,7 @@ async function sendMessage() {
     chat.scrollTop = chat.scrollHeight;
 
   } catch (err) {
-    chat.innerHTML += `<p class="bot">Server error 😢</p>`;
+    console.error(err);
+    chat.innerHTML += `<p class="bot">Server error 😢 (Check console)</p>`;
   }
 }
-
