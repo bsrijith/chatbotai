@@ -1,0 +1,263 @@
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, Arial, sans-serif;
+}
+
+/* ================= THEME VARIABLES ================= */
+:root {
+  --bg: #f7f8fc;
+  --panel: #ffffff;
+  --text: #222;
+  --card: #ffffff;
+  --accent: #5b6cff;
+  --border: #eaeaea;
+  --input: #ffffff;
+  --shadow: rgba(0,0,0,0.05);
+}
+
+body.dark {
+  --bg: #0f1115;
+  --panel: #161a22;
+  --text: #f5f6fa;
+  --card: #1d2230;
+  --accent: #7b8cff;
+  --border: #2a2f3a;
+  --input: #1d2230;
+  --shadow: rgba(0,0,0,0.4);
+}
+
+/* ================= BODY ================= */
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ================= APP LAYOUT ================= */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 260px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.nav {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #f1f3ff;
+  cursor: pointer;
+  text-align: left;
+}
+
+body.dark .nav {
+  background: #22283a;
+  color: var(--text);
+}
+
+.nav.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.nav.new {
+  opacity: 0.8;
+}
+
+.vault {
+  margin-top: auto;
+  font-size: 12px;
+  color: gray;
+}
+
+/* ================= MAIN ================= */
+.main {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= TOP BAR ================= */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#themeToggle {
+  border: none;
+  background: var(--card);
+  color: var(--text);
+  font-size: 18px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.signin {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ================= CARDS ================= */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px var(--shadow);
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* ================= CHAT ================= */
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.chat p {
+  max-width: 75%;
+  line-height: 1.5;
+}
+
+.bot {
+  background: var(--card);
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.user {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+/* ================= INPUT BAR ================= */
+.input-bar {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--input);
+  color: var(--text);
+  outline: none;
+}
+
+.input-bar button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0 20px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+/* ================= AUTH PAGE ================= */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.auth-box {
+  background: var(--card);
+  padding: 30px;
+  width: 320px;
+  border-radius: 18px;
+  box-shadow: 0 10px 40px var(--shadow);
+  text-align: center;
+}
+
+.auth-box h2 {
+  margin-bottom: 20px;
+}
+
+.auth-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--input);
+  color: var(--text);
+}
+
+.auth-box button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-box .secondary {
+  background: #eee;
+  color: #333;
+}
+
+body.dark .auth-box .secondary {
+  background: #2a2f3a;
+  color: #fff;
+}
+
+#msg {
+  margin-top: 10px;
+  font-size: 13px;
+  color: red;
+}

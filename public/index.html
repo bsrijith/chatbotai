@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>one.ai</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">1 one.ai</div>
+
+    <nav>
+      <button class="nav active">⚡ Instant Guidance</button>
+      <button class="nav">🎯 Career & Exams</button>
+      <button class="nav new">＋ New Session</button>
+    </nav>
+
+    <div class="vault">
+      <small>🔒 Vault secured</small>
+      <p>Your guidance history is kept private</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="topbar">
+      <h2>Knowledge Hub</h2>
+
+      <div class="top-actions">
+        <button id="themeToggle" title="Toggle theme">🌙</button>
+        <button id="authBtn" class="signin">Sign In</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card">🤖 AI Career Guidance</div>
+      <div class="card">🚀 JEE (Engineering)</div>
+      <div class="card">🍎 CTET (Teaching)</div>
+      <div class="card">🩺 NEET (Medical)</div>
+      <div class="card">📜 UPSC / Civil</div>
+      <div class="card">🧠 Study Science</div>
+    </section>
+
+    <!-- CHAT -->
+    <div id="chat" class="chat">
+      <p class="bot">👋 Welcome to one.ai — ask me anything.</p>
+    </div>
+
+    <div class="input-bar">
+      <input id="input" placeholder="Ask one.ai anything..." />
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+
+<!-- AUTH + THEME HANDLER -->
+<script>
+  /* ---------- AUTH ---------- */
+  const authBtn = document.getElementById("authBtn");
+  const user = localStorage.getItem("user");
+
+  if (user) {
+    authBtn.textContent = "Logout";
+    authBtn.onclick = () => {
+      localStorage.removeItem("user");
+      location.reload();
+    };
+  } else {
+    authBtn.textContent = "Sign In";
+    authBtn.onclick = () => {
+      window.location.href = "/login.html";
+    };
+  }
+
+  /* ---------- THEME ---------- */
+  const themeToggle = document.getElementById("themeToggle");
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+    themeToggle.textContent = "☀️";
+  }
+
+  themeToggle.onclick = () => {
+    document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    themeToggle.textContent = isDark ? "☀️" : "🌙";
+  };
+</script>
+
+</body>
+</html>
