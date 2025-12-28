@@ -1,5 +1,5 @@
 
-const BACKEND_URL = "https://YOUR-RENDER-APP-NAME.onrender.com";
+const BACKEND_URL = "https://one-ai-backend-guy2.onrender.com";
 
 async function sendMessage() {
   const input = document.getElementById("input");

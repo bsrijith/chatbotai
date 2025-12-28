@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const cors = require("cors"); // <--- NEW: Import CORS
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Models
@@ -10,14 +11,17 @@ const User = require("./models/User");
 const Chat = require("./models/Chat");
 
 const app = express();
+
+/* ================= MIDDLEWARE ================= */
+// <--- NEW: Allow requests from any origin (Firebase, localhost, etc.)
+app.use(cors()); 
+
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static("public")); // You can keep this for local testing
 
 /* ================= DATABASE ================= */
 mongoose
-  .connect(
-    process.env.MONGODB_URI
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB error:", err));
 
@@ -29,8 +33,10 @@ if (!process.env.GEMINI_API_KEY) {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // ✅ WORKING MODEL
+// Note: Ensure "gemini-2.5-flash" is a valid model name you have access to. 
+// Standard models are usually "gemini-1.5-flash" or "gemini-pro".
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash"
+  model: "gemini-2.5-flash" 
 });
 
 /* ================= AUTH ================= */
@@ -42,34 +48,40 @@ app.post("/api/signup", async (req, res) => {
     return res.status(400).json({ message: "Email and password required" });
   }
 
-  const exists = await User.findOne({ email });
-  if (exists) {
-    return res.status(400).json({ message: "User already exists" });
+  try {
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.create({ email, password: hashedPassword });
+
+    res.json({ message: "Signup successful" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error during signup" });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  await User.create({ email, password: hashedPassword });
-
-  res.json({ message: "Signup successful" });
 });
 
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(401).json({ message: "Invalid credentials" });
-  }
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    return res.status(401).json({ message: "Invalid credentials" });
-  }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-  res.json({ message: "Login successful", email });
+    res.json({ message: "Login successful", email });
+  } catch (err) {
+    res.status(500).json({ message: "Server error during login" });
+  }
 });
-
-/* ================= GEMINI CHAT ================= */
 
 /* ================= GEMINI CHAT ================= */
 
@@ -100,15 +112,21 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-
 /* ================= HISTORY ================= */
 
 app.get("/api/history/:email", async (req, res) => {
-  const chats = await Chat.find({ userEmail: req.params.email });
-  res.json(chats);
+  try {
+    const chats = await Chat.find({ userEmail: req.params.email });
+    res.json(chats);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching history" });
+  }
 });
 
 /* ================= SERVER ================= */
-app.listen(3000, () => {
-  console.log("✅ one.ai running at http://localhost:3000");
+// <--- NEW: Use Render's PORT or fallback to 3000
+const PORT = process.env.PORT || 3000; 
+
+app.listen(PORT, () => {
+  console.log(`✅ one.ai running on port ${PORT}`);
 });
